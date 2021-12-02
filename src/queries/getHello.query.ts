@@ -1,17 +1,19 @@
 import { QueryHandler, IQueryHandler } from '@nestjs/cqrs';
-import { AppService } from '../app.service';
-import { HelloByName, HelloResult } from '../app.interface';
+import { Hello } from '../app.interface';
+import { AppRepository } from 'src/app.repository';
 
 export class GetHelloQuery {
-  constructor(public readonly data: HelloByName) {}
+  constructor(public readonly data: Hello) {}
 }
 
 @QueryHandler(GetHelloQuery)
 export class GetHelloHandler implements IQueryHandler<GetHelloQuery> {
-  constructor(private readonly service: AppService) {}
+  constructor(private readonly repository: AppRepository) {}
 
   async execute(query: GetHelloQuery) {
-    console.log('Get Hello Query');
-    return this.service.getHello(query.data.name);
+    const { data } = query;
+    const hello = await this.repository.findOne({ name: data.name });
+
+    return `Hello World! ${hello.name}`;
   }
 }

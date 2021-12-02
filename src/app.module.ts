@@ -5,7 +5,6 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { AppController } from './app.controller';
 import { Hello } from './app.entity';
 import { AppRepository } from './app.repository';
-import { AppService } from './app.service';
 import { AppConfigModule } from './config/config.module';
 import { AppConfigService } from './config/config.service';
 import { QueryHandlers } from './queries';
@@ -32,6 +31,6 @@ import { QueryHandlers } from './queries';
     TypeOrmModule.forFeature([AppRepository]),
   ],
   controllers: [AppController],
-  providers: [AppService, ...QueryHandlers],
+  providers: [...QueryHandlers],
 })
 export class AppModule {}

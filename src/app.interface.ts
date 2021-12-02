@@ -1,4 +1,4 @@
-export interface HelloByName {
+export interface Hello {
   name: string;
 }
 

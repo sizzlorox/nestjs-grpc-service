@@ -1,15 +1,19 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { CqrsModule } from '@nestjs/cqrs';
+
 import { AppController } from './app.controller';
 import { Hello } from './app.entity';
 import { AppRepository } from './app.repository';
 import { AppService } from './app.service';
 import { AppConfigModule } from './config/config.module';
 import { AppConfigService } from './config/config.service';
+import { QueryHandlers } from './queries';
 
 @Module({
   imports: [
     AppConfigModule,
+    CqrsModule,
     TypeOrmModule.forRootAsync({
       imports: [AppConfigModule],
       inject: [AppConfigService],
@@ -28,6 +32,6 @@ import { AppConfigService } from './config/config.service';
     TypeOrmModule.forFeature([AppRepository]),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, ...QueryHandlers],
 })
 export class AppModule {}

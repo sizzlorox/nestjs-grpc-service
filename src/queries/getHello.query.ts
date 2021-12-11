@@ -13,6 +13,9 @@ export class GetHelloHandler implements IQueryHandler<GetHelloQuery> {
   async execute(query: GetHelloQuery) {
     const { data } = query;
     const hello = await this.repository.findOne({ name: data.name });
+    if (!hello) {
+      return `Did not find ${data.name}`;
+    }
 
     return `Hello World! ${hello.name}`;
   }

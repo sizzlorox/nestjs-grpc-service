@@ -7,6 +7,7 @@ import { Hello } from './app.entity';
 import { AppRepository } from './app.repository';
 import { AppConfigModule } from './config/config.module';
 import { AppConfigService } from './config/config.service';
+import { CommandHandlers } from './commands';
 import { QueryHandlers } from './queries';
 
 @Module({
@@ -31,6 +32,6 @@ import { QueryHandlers } from './queries';
     TypeOrmModule.forFeature([AppRepository]),
   ],
   controllers: [AppController],
-  providers: [...QueryHandlers],
+  providers: [...CommandHandlers, ...QueryHandlers],
 })
 export class AppModule {}

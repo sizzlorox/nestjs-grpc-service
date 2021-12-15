@@ -9,11 +9,31 @@ import { AppConfigModule } from './config/config.module';
 import { AppConfigService } from './config/config.service';
 import { CommandHandlers } from './commands';
 import { QueryHandlers } from './queries';
+import { ClientsModule, Transport } from '@nestjs/microservices';
+import { HelloSagas } from './sagas/hello.saga';
+import { AppService } from './app.service';
 
 @Module({
   imports: [
     AppConfigModule,
     CqrsModule,
+    // EVENT STORE
+    ClientsModule.register([
+      {
+        name: 'EVENT_STORE',
+        transport: Transport.KAFKA,
+        options: {
+          client: {
+            clientId: 'event_store',
+            brokers: ['localhost:9092'],
+          },
+          consumer: {
+            groupId: 'event_store',
+          },
+        },
+      },
+    ]),
+    // READ DATABASE
     TypeOrmModule.forRootAsync({
       imports: [AppConfigModule],
       inject: [AppConfigService],
@@ -32,6 +52,6 @@ import { QueryHandlers } from './queries';
     TypeOrmModule.forFeature([AppRepository]),
   ],
   controllers: [AppController],
-  providers: [...CommandHandlers, ...QueryHandlers],
+  providers: [AppService, ...CommandHandlers, ...QueryHandlers, HelloSagas],
 })
 export class AppModule {}

@@ -27,10 +27,4 @@ export class AppController {
   async create(data: Hello): Promise<void> {
     await this.commandBus.execute(new CreateHelloCommand(data));
   }
-
-  @MessagePattern('event.store')
-  async saveHello(message: Message) {
-    const data = JSON.parse(message.value.toString()) as Hello;
-    console.log(data);
-  }
 }

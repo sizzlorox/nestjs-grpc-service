@@ -12,27 +12,20 @@ import { QueryHandlers } from './queries';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { HelloSagas } from './sagas/hello.saga';
 import { AppService } from './app.service';
+import { EventStoreModule } from './eventstore/eventstore.module';
 
 @Module({
   imports: [
     AppConfigModule,
     CqrsModule,
     // EVENT STORE
-    ClientsModule.register([
-      {
-        name: 'EVENT_STORE',
-        transport: Transport.KAFKA,
-        options: {
-          client: {
-            clientId: 'event_store',
-            brokers: ['localhost:9092'],
-          },
-          consumer: {
-            groupId: 'event_store',
-          },
-        },
-      },
-    ]),
+    EventStoreModule.forRootAsync({
+      imports: [AppConfigModule],
+      inject: [AppConfigService],
+      useFactory: async (config: AppConfigService) => ({
+        host: config.eventStoreHost,
+      }),
+    }),
     // READ DATABASE
     TypeOrmModule.forRootAsync({
       imports: [AppConfigModule],

@@ -1,12 +1,7 @@
-import {
-  CommandHandler,
-  EventBus,
-  ICommand,
-  ICommandHandler,
-} from '@nestjs/cqrs';
+import { jsonEvent } from '@eventstore/db-client';
+import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
 import { Hello } from 'src/app.interface';
 import { AppService } from 'src/app.service';
-import { CreateHelloEvent } from 'src/events/CreateHello.event';
 
 export class CreateHelloCommand implements ICommand {
   constructor(public readonly data: Hello) {}

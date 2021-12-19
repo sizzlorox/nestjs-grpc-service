@@ -27,4 +27,8 @@ export class AppConfigService {
   get databaseSchema(): string {
     return this.configService.get<string>('DB_SCHEMA');
   }
+
+  get eventStoreHost(): string {
+    return this.configService.get<string>('EVENTSTORE_HOST');
+  }
 }
